@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Taskify - Simple Task Manager</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Taskify</h1>
+      <button id="themeToggle">🌙 Toggle Theme</button>
+    </header>
+
+    <section class="task-input">
+      <input type="text" id="taskInput" placeholder="Enter a new task...">
+      <button id="addTaskBtn">➕ Add Task</button>
+    </section>
+
+    <section class="task-controls">
+      <button id="sortAsc">⬆ Sort Asc</button>
+      <button id="sortDesc">⬇ Sort Desc</button>
+      <button id="resetSort">🔄 Reset</button>
+      <button id="deleteSelected">🗑 Delete Selected</button>
+    </section>
+
+    <ul id="taskList"></ul>
+
+    <footer>
+      <p>Total Tasks: <span id="totalCount">0</span></p>
+      <p>Completed: <span id="completedCount">0</span></p>
+      <p>Edited: <span id="editedCount">0</span></p>
+      <p>Deleted: <span id="deletedCount">0</span></p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
