@@ -156,14 +156,18 @@ function addTask() {
     return alert("Duplicate task not allowed!");
   }
 
-  const newTask = { text, completed: false, selected: false };
+  const newTask = { 
+    text, 
+    completed: false, 
+    selected: false, 
+    originalIndex: tasks.length // track insertion order
+  };
   tasks.push(newTask);
-  originalTasks.push(newTask); // keep baseline updated
-
   saveTasks();
   renderTasks();
   taskInput.value = "";
 }
+
 
 
 function editTask(index) {
@@ -251,13 +255,16 @@ document.getElementById("sortDesc").addEventListener("click", () => {
   renderTasks();
 });
 document.getElementById("resetSort").addEventListener("click", () => {
-  tasks = [...originalTasks]; // restore baseline order
+  // Reset only the order, not deleted tasks
+  tasks.sort((a, b) => a.originalIndex - b.originalIndex);
   renderTasks();
 });
+
 
 document.getElementById("themeToggle").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
 renderTasks();
+
 
