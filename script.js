@@ -155,13 +155,16 @@ function addTask() {
   if (tasks.some(t => t.text.toLowerCase() === text.toLowerCase())) {
     return alert("Duplicate task not allowed!");
   }
-  const newTask = { text, completed: false };
+
+  const newTask = { text, completed: false, selected: false };
   tasks.push(newTask);
   originalTasks.push(newTask); // keep baseline updated
+
   saveTasks();
   renderTasks();
   taskInput.value = "";
 }
+
 
 function editTask(index) {
   const li = taskList.children[index];
@@ -248,9 +251,7 @@ document.getElementById("sortDesc").addEventListener("click", () => {
   renderTasks();
 });
 document.getElementById("resetSort").addEventListener("click", () => {
-  // Restore the baseline order (latest after adding tasks)
-  let originalTasks = JSON.parse(localStorage.getItem("originalTasks")) || [];
-  tasks = [...originalTasks];
+  tasks = [...originalTasks]; // restore baseline order
   renderTasks();
 });
 
@@ -259,3 +260,4 @@ document.getElementById("themeToggle").addEventListener("click", () => {
 });
 
 renderTasks();
+
