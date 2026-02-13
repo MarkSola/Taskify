@@ -8,6 +8,14 @@ const editedCount = document.getElementById("editedCount");
 const deletedCount = document.getElementById("deletedCount");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+// 🔑 Ensure every task has an originalIndex
+tasks.forEach((t, i) => {
+  if (t.originalIndex === undefined) {
+    t.originalIndex = i;
+  }
+});
+
 let originalTasks = JSON.parse(localStorage.getItem("originalTasks")) || [...tasks];
 
 let deletedCounter = 0;
@@ -269,6 +277,7 @@ document.getElementById("themeToggle").addEventListener("click", () => {
 });
 
 renderTasks();
+
 
 
 
