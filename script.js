@@ -130,16 +130,19 @@ span.addEventListener("touchend", () => {
     });
 
     li.addEventListener("drop", e => {
-      const fromIndex = e.dataTransfer.getData("index");
-      const toIndex = index;
+  const fromIndex = e.dataTransfer.getData("index");
+  const toIndex = index;
 
-      // Move task in array
-      const moved = tasks.splice(fromIndex, 1)[0];
-      tasks.splice(toIndex, 0, moved);
+  const moved = tasks.splice(fromIndex, 1)[0];
+  tasks.splice(toIndex, 0, moved);
 
-      saveTasks();
-      renderTasks();
-    });
+  // 🔑 Update originalIndex for all tasks
+  tasks.forEach((t, i) => t.originalIndex = i);
+
+  saveTasks();
+  renderTasks();
+});
+
   });
 
   // Update counters
@@ -266,5 +269,6 @@ document.getElementById("themeToggle").addEventListener("click", () => {
 });
 
 renderTasks();
+
 
 
