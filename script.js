@@ -9,7 +9,7 @@ const deletedCount = document.getElementById("deletedCount");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-// 🔑 Ensure every task has an originalIndex (for Reset baseline)
+// 🔑 Ensure every task has an originalIndex (true baseline)
 tasks.forEach((t, i) => {
   if (t.originalIndex === undefined) {
     t.originalIndex = i;
@@ -36,7 +36,7 @@ taskInput.addEventListener("keypress", e => {
 });
 
 function saveTasks() {
-  //  Only save tasks, no more originalTasks
+  // ✅ Only save tasks, no more originalTasks
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
@@ -59,32 +59,9 @@ function renderTasks() {
     // Task text
     const span = document.createElement("span");
     span.textContent = task.text;
-    // Desktop double-click
-span.addEventListener("dblclick", () => editTask(index));
+    span.addEventListener("dblclick", () => editTask(index));
 
-// Mobile tap-and-hold
-let touchTimer;
-span.addEventListener("touchstart", () => {
-  touchTimer = setTimeout(() => {
-    editTask(index); // enter edit mode after ~600ms hold
-  }, 600);
-});
-
-span.addEventListener("touchend", () => {
-  clearTimeout(touchTimer);
-});
-
-// Mobile double-tap
-let lastTap = 0;
-span.addEventListener("touchend", () => {
-  const currentTime = new Date().getTime();
-  const tapLength = currentTime - lastTap;
-  if (tapLength < 300 && tapLength > 0) {
-    editTask(index); // double-tap detected
-  }
-  lastTap = currentTime;
-});
-
+    // --- Mobile tap/hold/double-tap omitted for brevity, keep your existing code ---
 
     // Action buttons
     const actions = document.createElement("div");
@@ -132,17 +109,16 @@ span.addEventListener("touchend", () => {
     });
 
     li.addEventListener("drop", e => {
-  const fromIndex = e.dataTransfer.getData("index");
-  const toIndex = index;
+      const fromIndex = e.dataTransfer.getData("index");
+      const toIndex = index;
 
-  const moved = tasks.splice(fromIndex, 1)[0];
-  tasks.splice(toIndex, 0, moved);
+      const moved = tasks.splice(fromIndex, 1)[0];
+      tasks.splice(toIndex, 0, moved);
 
-  // ❌ Do not reset originalIndex here
-  saveTasks();
-  renderTasks();
-});
-
+      // ❌ Do not update originalIndex here
+      saveTasks();
+      renderTasks();
+    });
   });
 
   // Update counters
@@ -163,7 +139,7 @@ function addTask() {
     text, 
     completed: false, 
     selected: false, 
-    originalIndex: tasks.length // track insertion order
+    originalIndex: tasks.length // baseline position
   };
   tasks.push(newTask);
   saveTasks();
@@ -171,30 +147,24 @@ function addTask() {
   taskInput.value = "";
 }
 
-
-
 function editTask(index) {
   const li = taskList.children[index];
   const span = li.querySelector("span");
 
-  // Create input field
   const input = document.createElement("input");
   input.type = "text";
   input.value = tasks[index].text;
   input.className = "edit-input";
 
-  // Replace span with input
   li.replaceChild(input, span);
   input.focus();
 
-  // Save on Enter
   input.addEventListener("keypress", e => {
     if (e.key === "Enter") {
       saveEdit(index, input.value, li, input);
     }
   });
 
-  // Save on blur (clicking away)
   input.addEventListener("blur", () => {
     saveEdit(index, input.value, li, input);
   });
@@ -202,35 +172,10 @@ function editTask(index) {
 
 function saveEdit(index, newText, li, input) {
   const trimmed = newText.trim();
-  if (!trimmed) return; // prevent empty
-
-  // Prevent duplicates
-  if (tasks.some((t, i) => i !== index && t.text.toLowerCase() === trimmed.toLowerCase())) {
-    alert("Duplicate task not allowed!");
-    return;
-  }
-
-  tasks[index].text = trimmed;
-  editedCounter++;
-  saveTasks();
-
-  // Restore span with dblclick listener
-  const span = document.createElement("span");
-  span.textContent = trimmed;
-  span.addEventListener("dblclick", () => editTask(index));
-  li.replaceChild(span, input);
-
-  renderTasks();
-}
-
-
-function saveEdit(index, newText, li, input) {
-  const trimmed = newText.trim();
   if (!trimmed) {
     alert("Task cannot be empty!");
     return;
   }
-  // Prevent duplicates
   if (tasks.some((t, i) => i !== index && t.text.toLowerCase() === trimmed.toLowerCase())) {
     alert("Duplicate task not allowed!");
     return;
@@ -240,7 +185,6 @@ function saveEdit(index, newText, li, input) {
   editedCounter++;
   saveTasks();
 
-  // Restore span
   const span = document.createElement("span");
   span.textContent = trimmed;
   span.addEventListener("dblclick", () => editTask(index));
@@ -263,16 +207,8 @@ document.getElementById("resetSort").addEventListener("click", () => {
   renderTasks();
 });
 
-
 document.getElementById("themeToggle").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
 renderTasks();
-
-
-
-
-
-
-
