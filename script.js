@@ -7,17 +7,14 @@ const completedCount = document.getElementById("completedCount");
 const editedCount = document.getElementById("editedCount");
 const deletedCount = document.getElementById("deletedCount");
 
-
-
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-// Ensure every task has an originalIndex
+// 🔑 Ensure every task has an originalIndex (for Reset baseline)
 tasks.forEach((t, i) => {
   if (t.originalIndex === undefined) {
     t.originalIndex = i;
   }
 });
-
 
 let deletedCounter = 0;
 let editedCounter = 0;
@@ -38,14 +35,10 @@ taskInput.addEventListener("keypress", e => {
   if (e.key === "Enter") addTask();
 });
 
-
-
 function saveTasks() {
+  //  Only save tasks, no more originalTasks
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
-
-
-
 
 function renderTasks() {
   taskList.innerHTML = "";
@@ -278,6 +271,7 @@ document.getElementById("themeToggle").addEventListener("click", () => {
 });
 
 renderTasks();
+
 
 
 
