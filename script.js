@@ -9,7 +9,7 @@ const deletedCount = document.getElementById("deletedCount");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-// 🔑 Ensure every task has an originalIndex (true baseline)
+// 🔑 Ensure every task has an originalIndex (true baseline, never changes)
 tasks.forEach((t, i) => {
   if (t.originalIndex === undefined) {
     t.originalIndex = i;
@@ -36,7 +36,7 @@ taskInput.addEventListener("keypress", e => {
 });
 
 function saveTasks() {
-  // ✅ Only save tasks, no more originalTasks
+  // ✅ Only save tasks, no separate originalTasks
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
@@ -45,7 +45,7 @@ function renderTasks() {
   tasks.forEach((task, index) => {
     const li = document.createElement("li");
     li.className = task.completed ? "completed" : "";
-    li.draggable = true; // make draggable
+    li.draggable = true;
 
     // Checkbox
     const checkbox = document.createElement("input");
@@ -60,8 +60,6 @@ function renderTasks() {
     const span = document.createElement("span");
     span.textContent = task.text;
     span.addEventListener("dblclick", () => editTask(index));
-
-    // --- Mobile tap/hold/double-tap omitted for brevity, keep your existing code ---
 
     // Action buttons
     const actions = document.createElement("div");
@@ -139,7 +137,7 @@ function addTask() {
     text, 
     completed: false, 
     selected: false, 
-    originalIndex: tasks.length // baseline position
+    originalIndex: tasks.length // permanent baseline
   };
   tasks.push(newTask);
   saveTasks();
